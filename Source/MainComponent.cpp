@@ -280,7 +280,8 @@ void MainComponent::getNextAudioBlock(const AudioSourceChannelInfo& bufferToFill
 		if (wavetablePhase > table_len) wavetablePhase -= table_len;
 		*/
 		
-		double wavetableSample = (sample2.play(wavetableFrequency, 0, sample2.getLength())) * wavetableAmp;
+		double wavetableSample =( ((sample2.play(wavetableFrequency, 0, sample2.getLength())) +1)/2)* wavetableAmp;
+		
 		// acquire the dry signal:
 		dryLeft = sample1.play();// buffer.getReadPointer(0)[sample];
 
@@ -333,7 +334,10 @@ void MainComponent::getNextAudioBlock(const AudioSourceChannelInfo& bufferToFill
 			// Find the indexes of all of the taps:
 			// by subtracting each tap's delaytime from the write pointer:
 			// the square wave makes the position of the playhead jump between points:
-			ind[i] = (counter + phasor  + ((wavetableSample + 1.0f) / 2.0f)) - dt[i];
+			ind[i] = (counter + wavetableSample) - dt[i];
+			
+			// with pitch:
+			//ind[i] = (counter + phasor  + wavetableSample) - dt[i];
 				
 				// dt[i] + (counter + phasor + (square * 100000.0f)); // with the square wave effect !:)
 				//dt[i] + (phasor + (square * 215000.0f));
